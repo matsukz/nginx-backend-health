@@ -1,0 +1,93 @@
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 20px;
+}
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.block {
+    margin-bottom: 20px;
+}
+.messages {
+    margin-bottom: 10px;
+}
+.messages .ok {
+    color: green;
+    white-space: pre-wrap;
+}
+.messages .error {
+    color: red;
+    white-space: pre-wrap;
+}
+.buttons {
+    margin-top: 10px;
+}
+.buttons button {
+    margin-right: 10px;
+    padding: 6px 14px;
+}
+button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+small {
+    color: #666;
+}
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    overflow-x: auto;
+}
+
+/* nginx 状態表示 */
+.nginx-status-box {
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.nginx-status-label {
+    font-size: 0.9rem;
+    color: #555;
+}
+.status-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.status-ok {
+    background: #e0f7ec;
+    color: #137333;
+}
+.status-bad {
+    background: #fde0e0;
+    color: #b3261e;
+}
+.status-detail {
+    font-size: 0.8rem;
+    color: #555;
+    white-space: pre-wrap;
+}
+
+/* リセットボタン */
+.reset-area {
+    margin-top: 30px;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-end;
+}
+.reset-area button {
+    padding: 6px 14px;
+}

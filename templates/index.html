@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>Nginx upstream サーバー管理</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+    <script src="./main.js"></script>
+    <div class="container">
+        <h1>Nginx upstream サーバー管理</h1>
+
+        <!-- nginx の systemd 状態表示 -->
+        <div class="nginx-status-box">
+            <div class="nginx-status-label">nginx（systemd）状態</div>
+            {% if nginx_is_active %}
+                <span class="status-pill status-ok">active (running)</span>
+            {% else %}
+                <span class="status-pill status-bad">inactive / error</span>
+            {% endif %}
+            {% if nginx_status_message %}
+                <div class="status-detail">{{ nginx_status_message }}</div>
+            {% endif %}
+        </div>
+
+        <div class="messages">
+            {% if message %}
+                <div class="ok">{{ message }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+        </div>
+
+        <form method="post" id="main-form">
+            <!-- 元のIPリスト -->
+            <div class="block">
+                <h2>1. IPアドレスリスト（編集可能）</h2>
+                <p>
+                    <small>
+                        app.pyと同じディレクトリの <code>ip_list.txt</code> の初期内容が表示されます。<br>
+                        手動で調整してから「テスト」ボタンを押してください。
+                    </small>
+                </p>
+                <textarea name="ip_list" rows="10" placeholder="192.0.2.1&#10;192.0.2.2&#10;192.0.3.3">{{ ip_list_text }}</textarea>
+            </div>
+
+            <!-- テスト成功IPリスト -->
+            <div class="block">
+                <h2>2. テスト成功IPリスト</h2>
+                <p>
+                    <small>
+                        「テスト」ボタンを押すと、この下にHTTPリクエストが成功したIPだけが出力されます。<br>
+                        必要であればここも手動で微調整してから「置換」ボタンを押してください。
+                    </small>
+                </p>
+                <textarea name="success_ip_list" rows="10" placeholder="テストに成功したIPがここに表示されます。">{{ success_ip_list_text }}</textarea>
+            </div>
+
+            <div class="buttons">
+                <button type="submit" name="action" value="test">テスト</button>
+                <button type="submit" name="action" value="replace">置換 &amp; nginx再読み込み</button>
+            </div>
+        </form>
+
+        <div class="block">
+            <h2>nginx設定ファイル</h2>
+            <p>
+                <small>
+                    自動生成される upstream 設定ファイルのパス:<br>
+                    <code>{{ nginx_upstream_file }}</code>
+                </small>
+            </p>
+            <p>nginx 側の設定例:</p>
+                <pre>
+                upstream backend {
+                    include {{ nginx_upstream_file }};
+                }
+
+                server {
+                    listen 80;
+                    location / {
+                        proxy_pass http://backend;
+                    }
+                }
+                </pre>
+        </div>
+
+        <!-- リセットボタン（最下部） -->
+        <div class="reset-area">
+            <button type="button" id="reset-button">リセット（画面の内容を初期表示に戻す）</button>
+        </div>
+    </div>
+
+</body>
+</html>
