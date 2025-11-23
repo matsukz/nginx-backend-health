@@ -3,7 +3,7 @@ import ipaddress
 import subprocess
 from pathlib import Path
 import shutil
-import requests
+import requests  # pip install requests
 
 app = Flask(__name__)
 
@@ -77,20 +77,6 @@ def nginx_test_config():
 def reload_nginx():
     subprocess.run(NGINX_RELOAD_CMD, check=True)
 
-def get_nginx_systemd_status():
-    try:
-        r = subprocess.run(
-            ["systemctl", "is-active", "nginx"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        is_active = (r.stdout.strip() == "active")
-        # 詳細が欲しければ is-active ではなく status --no-pager 等に変える
-        return is_active, r.stdout + r.stderr
-    except Exception as e:
-        return False, str(e)
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -99,8 +85,6 @@ def index():
 
     ip_list_text = load_ip_list()
     success_ip_list_text = ""
-
-    nginx_is_active, nginx_status_message = get_nginx_systemd_status()
 
     if request.method == "POST":
         action = request.form.get("action")
@@ -164,8 +148,6 @@ def index():
         message=message,
         error=error,
         nginx_upstream_file=str(NGINX_UPSTREAM_FILE),
-        nginx_is_active=nginx_is_active,
-        nginx_status_message=nginx_status_message,
     )
 
 

@@ -3,25 +3,11 @@
 <head>
     <meta charset="utf-8">
     <title>Nginx upstream サーバー管理</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
 </head>
 <body>
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
     <div class="container">
         <h1>Nginx upstream サーバー管理</h1>
-
-        <!-- nginx の systemd 状態表示 -->
-        <div class="nginx-status-box">
-            <div class="nginx-status-label">nginx（systemd）状態</div>
-            {% if nginx_is_active %}
-                <span class="status-pill status-ok">active (running)</span>
-            {% else %}
-                <span class="status-pill status-bad">inactive / error</span>
-            {% endif %}
-            {% if nginx_status_message %}
-                <div class="status-detail">{{ nginx_status_message }}</div>
-            {% endif %}
-        </div>
 
         <div class="messages">
             {% if message %}
@@ -32,7 +18,7 @@
             {% endif %}
         </div>
 
-        <form method="post" id="main-form">
+        <form method="post">
             <!-- 元のIPリスト -->
             <div class="block">
                 <h2>1. IPアドレスリスト（編集可能）</h2>
@@ -71,26 +57,22 @@
                     <code>{{ nginx_upstream_file }}</code>
                 </small>
             </p>
-            <p>nginx 側の設定例:</p>
-                <pre>
-                upstream backend {
-                    include {{ nginx_upstream_file }};
-                }
+            <p>
+                nginx 側の設定例:
+            </p>
+    <pre>
+    upstream backend {
+        include {{ nginx_upstream_file }};
+    }
 
-                server {
-                    listen 80;
-                    location / {
-                        proxy_pass http://backend;
-                    }
-                }
-                </pre>
-        </div>
-
-        <!-- リセットボタン（最下部） -->
-        <div class="reset-area">
-            <button type="button" id="reset-button">リセット（画面の内容を初期表示に戻す）</button>
+    server {
+        listen 80;
+        location / {
+            proxy_pass http://backend;
+        }
+    }
+    </pre>
         </div>
     </div>
-
 </body>
 </html>
