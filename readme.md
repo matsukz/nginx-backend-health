@@ -26,8 +26,12 @@ $ open-webui serve
 $ sudo apt install nginx
 ```
 
-1. `nginx.conf`から`conf.d`をすべてincludeする行を削除
-2. 読み込み
+1. `nginx.conf`を開き、`conf.d`をすべてincludeする設定を削除(コメントアウト)
+   ```bash
+   # Ubuntuの場合
+   $ sudo nano /etc/nginx/nginx.conf
+   ```
+2. コメントアウトした下に読み込み設定を`nginx.conf`に追記して保存
    ```bash
    include /etc/nginx/conf.d/lm-proxy.conf;
    ```
@@ -42,7 +46,12 @@ $ sudo apt install nginx
        include /home/user/nginx-backend-health/upstream_servers.conf`;
     }
 
-   log_format
+   log_format lm "$time_local $remote_addr -> $upstream_addr $status";
+   
+   access_log /var/log/nginx/lm_access.log;
+   access_log /var/log/nginx/lm_proxy.log lm;
+   error_log /var/log/nginx/lm_error.log;
+   
 
    location / {
        proxy_pass http://backend;
@@ -115,5 +124,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 ```
+
 
 だえもんりろーどする。enableもね
